@@ -1,0 +1,144 @@
+@startuml
+'https://plantuml.com/class-diagramclass Position {
+
+
+Launcher ---> SokobanMain
+SokobanMain ---o Navigator
+SokobanMain ---> Scenes
+SokobanMain ---> GameEndLoose
+SokobanMain ---> GameEndWin
+SokobanMain ---> GamePlay
+SokobanMain ---> GameStart
+SokobanMain ---o Navigator
+Navigator ---> Scenes
+GameBoard ---o BLOCK
+Controller ---o BLOCK
+Controller ---> GameBoard
+BaseScene ---o Navigator
+GameStart ---> Scenes
+GameStart ---o Navigator
+GamePlay ---o Controller
+GamePlay ---o GameBoard
+GamePlay ---o Navigator
+GamePlay ---> Scenes
+GameEndLoose ---> Scenes
+GameEndLoose ---o Navigator
+GameEndWin ---> Scenes
+GameEndWin ---o Navigator
+
+enum BLOCK {
+     BARRIER
+     FLOOR
+     DESTINATION
+     CHEST
+     PLAYER
+     PLAYERONDESTINATION
+}
+enum Scenes{
+    GAMEWIN
+    GAMESTART
+    GAMEPLAY
+    GAMELOOSE
+}
+
+class GameBoard {
+    - board : BLOCK[][]
+    - y : int
+    - x : int
+    - longesLineInMap : int
+    - level : int
+    - blocksToImages : HashMap<BLOCK, Image>
+    - barrierImage : Image final
+    - floorImage : Image final
+    - destinationImage : Image final
+    - chestImage : Image final
+    - playerImage : Image final
+    - buildMap() : BLOCK[][]
+    - drawMap(gc : GraphicsContext, gameBoard : GameBoard) : void
+    - getBoard() : BLOCK[][]
+    - setBoard(board : BLOCK[][]) : void
+    - getY() : int
+    - getX() : int
+    - setX(int x) : void
+    - setY(int y) : void
+    - getLevel() : int
+    - setLevel(level : int) : void
+}
+class Controller{
+    - collidable : boolean
+    - gameBoard : GameBoard
+    - chestX : int
+    - whatIsUnderThePlayer : BLOCK
+    - level : int
+    - isABoxInfront : boolean
+    - isCollidable() : boolean
+    - setCollidable(collidable : boolean) : void
+    - isABoxInfront() : boolean
+    - setIsABoxInfront(isABoxInfront : boolean) : void
+    - getChestY() : int
+    - getChestX() : int
+    - setChestY(chestY : int) : void
+    - setChestX(chestX : int) : void
+    + move(gameBoard : Gameboard) : void
+    - chestInFront(x : int, y : int, map : BLOCK[][]) : BLOCK[][]
+    - allowedToMove(x : int, y : int, map : BLOCK[][]) : void
+    - isGameOver(map : BLOCK[][]) : void
+    - isEveryChestOnTarget(map : BLOCK[][]) : void
+}
+abstract class BaseScene extends Scene{
+    # navigator : Navigator
+    # backGroundImage : Image
+    # canvas : Canvas
+    # gc : GraphicsContext
+    # root : Group
+    + BaseScene(root : Group, imageName : String, navigator : Navigator)
+    + BaseScene(root : Group, height : int, width : int, navigator : Navigator)
+    + draw() : void
+}
+class GameEndLoose extends BaseScene{
+    - animationTimer : AnimationTimer
+    - GameEndLoose(navigator : Navigator)
+    - action() : void
+}
+
+class GameEndWin extends BaseScene{
+    - animationTimer : AnimationTimer
+    - GameEndWin(navigator : Navigator)
+    - action() : void
+}
+
+class GamePlay extends BaseScene{
+    - gameBoard : GameBoard
+    - controller : Controller
+    - ec : ScheduledExecutorService
+    - animationTimer : AnimationTimer
+    - GamePlay(navigator : Navigator)
+    - update() : void
+    - draw(gc : GraphicsContext) : void
+}
+
+class GameStart extends BaseScene{
+    - animationTimer : AnimationTimer
+    - GameStart(navigator : Navigator)
+    - action() : void
+}
+
+class Launcher{
+    + {static} main(args : String[])
+}
+
+class Navigator{
+    - stage : Stage
+    - sceneMap : HashMap<Scenes, Scene>
+    + Navigator(stage : Stage)
+    + registerScene(scenes : Scenes, scene : Scene): void
+    + navigateTo(scenes : Scenes): void
+    + getScenes() : List<Scene>
+}
+
+class SokobanMain extends Application{
+    - navigator : Navigator
+    + start(stage : Stage) : void
+}
+
+@enduml
