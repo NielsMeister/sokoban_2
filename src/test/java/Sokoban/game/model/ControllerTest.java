@@ -1,7 +1,6 @@
 package Sokoban.game.model;
 
 import Sokoban.game.controller.Controller;
-import Sokoban.game.enums.Block;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

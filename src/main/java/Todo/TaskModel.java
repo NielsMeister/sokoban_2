@@ -1,6 +1,6 @@
 package Todo;
 
-public class Task {
+public class TaskModel {
     /**
      * Beschreibung der Aufgabe.
      */
@@ -23,7 +23,7 @@ public class Task {
      * @ param description Beschreibung der Aufgabe
      * @ param priority Prioritä t der Aufgabe
      */
-    public Task(String description, int priority) {
+    public TaskModel(String description, int priority) {
         this.description = description;
         this.priority = priority;
     }

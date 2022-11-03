@@ -4,73 +4,103 @@ import Sokoban.game.enums.Block;
 import Sokoban.game.model.GameBoard;
 
 /**
- * The type Controller.
+ * Controller class
  */
 public class Controller {
 
+    /**
+     * Indicates if game is over
+     */
     public boolean isGameOver = false;
 
-    public boolean isGameOver() {
+    /**
+     * GameOver boolean
+     *
+     * @return the boolean
+     */
+    public boolean gameOverCheck() {
         return isGameOver;
     }
 
+    /**
+     * Sets GameOver
+     *
+     * @param gameOver the game over
+     */
     public void setGameOver(boolean gameOver) {
         isGameOver = gameOver;
     }
 
+    /**
+     * Moves the character accordingly, reloads board
+     *
+     * @param gameBoard the game board
+     * @param x         the x
+     * @param y         the y
+     * @throws Exception the exception
+     */
     public void move(GameBoard gameBoard, int x, int y) throws Exception {
         Block[][] map = gameBoard.getBoard();
         try {
-            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.BARRIER) {
+            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.OBSTACLE_BLOCK) {
                 return;
             }
-            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.CHEST || map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.CHESTONDESTINATION) {
-                if (map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.BARRIER || map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.CHEST || map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.CHESTONDESTINATION) {
+            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.EYE_BLOCK || map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
+                if (map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK || map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.EYE_BLOCK || map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.EYEONDESTINATION_BLOCK) {
                     return;
                 }
-                if (map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.DESTINATION) {
-                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.CHESTONDESTINATION;
+                if (map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.PORTAL_BLOCK) {
+                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.EYEONDESTINATION_BLOCK;
                 } else {
-                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.CHEST;
-                    isGameOver(x, y, map, gameBoard);
+                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.EYE_BLOCK;
+                    gameOverCheck(x, y, map, gameBoard);
                 }
-                if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.CHESTONDESTINATION) {
-                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.CHEST;
+                if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
+                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.EYE_BLOCK;
                 }
             }
-            if (map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] == Block.PLAYERONDESTINATION) {
-                map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] = Block.DESTINATION;
+            if (map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] == Block.OPERATORONDESTINATION_BLOCK) {
+                map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] = Block.PORTAL_BLOCK;
             } else {
-                map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] = Block.FLOOR;
+                map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] = Block.GROUND_BLOCK;
             }
-            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.DESTINATION || map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.CHESTONDESTINATION) {
-                map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] = Block.PLAYERONDESTINATION;
+            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.PORTAL_BLOCK || map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
+                map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] = Block.OPERATORONDESTINATION_BLOCK;
             } else {
-                map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] = Block.PLAYER;
+                map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] = Block.OPERATOR_BLOCK;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new Exception("Ungültige Bewegung im Spielfeld. Breite: " + gameBoard.getLongestLineInMap() + " Höhe : " + gameBoard.getLines().size() + "Eingaben: Breite: " + gameBoard.getPlayerX() + " Höhe: " + gameBoard.getPlayerY());
         } catch (NullPointerException e) {
             throw new Exception("Karte wurde nicht korrekt geladen");
         }
-        isEveryChestOnTarget(map);
+        eyesOnPortalCheck(map);
         gameBoard.setPlayerX(gameBoard.getPlayerX() + x);
         gameBoard.setPlayerY(gameBoard.getPlayerY() + y);
         gameBoard.setBoard(map);
     }
 
-    public void isGameOver(int x, int y, Block[][] map, GameBoard gameBoard) throws Exception {
+    /**
+     * Checks if Game is over
+     *
+     * @param x         the x
+     * @param y         the y
+     * @param map       the map
+     * @param gameBoard the game board
+     * @throws Exception the exception
+     */
+    public void gameOverCheck(int x, int y, Block[][] map, GameBoard gameBoard) throws Exception {
         try {
-            if (map[gameBoard.getPlayerY() + y * 2 - 1][gameBoard.getPlayerX() + x * 2] == Block.BARRIER && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 - 1] == Block.BARRIER) {
+            if (map[gameBoard.getPlayerY() + y * 2 - 1][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 - 1] == Block.OBSTACLE_BLOCK) {
                 setGameOver(true);
             }
-            if (map[gameBoard.getPlayerY() + y * 2 - 1][gameBoard.getPlayerX() + x * 2] == Block.BARRIER && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 + 1] == Block.BARRIER) {
+            if (map[gameBoard.getPlayerY() + y * 2 - 1][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 + 1] == Block.OBSTACLE_BLOCK) {
                 setGameOver(true);
             }
-            if (map[gameBoard.getPlayerY() + y * 2 + 1][gameBoard.getPlayerX() + x * 2] == Block.BARRIER && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 + 1] == Block.BARRIER) {
+            if (map[gameBoard.getPlayerY() + y * 2 + 1][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 + 1] == Block.OBSTACLE_BLOCK) {
                 setGameOver(true);
             }
-            if (map[gameBoard.getPlayerY() + y * 2 + 1][gameBoard.getPlayerX() + x * 2] == Block.BARRIER && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 - 1] == Block.BARRIER) {
+            if (map[gameBoard.getPlayerY() + y * 2 + 1][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 - 1] == Block.OBSTACLE_BLOCK) {
                 setGameOver(true);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -78,12 +108,19 @@ public class Controller {
         }
     }
 
-    public boolean isEveryChestOnTarget(Block[][] map) throws Exception {
+    /**
+     * Checks if eyes are on target space
+     *
+     * @param map the map
+     * @return the boolean
+     * @throws Exception the exception
+     */
+    public boolean eyesOnPortalCheck(Block[][] map) throws Exception {
         int howManyTargetOrPlayerOnTargetAreFound = 0;
         try {
             for (Block[] blocks : map) {
                 for (Block block : blocks) {
-                    if (block == Block.DESTINATION || block == Block.PLAYERONDESTINATION) {
+                    if (block == Block.PORTAL_BLOCK || block == Block.OPERATORONDESTINATION_BLOCK) {
                         howManyTargetOrPlayerOnTargetAreFound += 1;
                     }
                 }

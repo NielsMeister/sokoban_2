@@ -11,16 +11,45 @@ import javafx.scene.image.Image;
 
 import java.util.Objects;
 
+/**
+ * BaseScene class
+ */
 public abstract class BaseScene extends Scene {
+    /**
+     * The Navigator.
+     */
     protected Navigator navigator;
+    /**
+     * The Background image.
+     */
     protected Image backgroundImage;
+    /**
+     * The Canvas.
+     */
     protected Canvas canvas;
+    /**
+     * The Gc.
+     */
     protected GraphicsContext gc;
+    /**
+     * The constant root.
+     */
     protected static Group root;
+    /**
+     * The Game board.
+     */
     protected GameBoard gameBoard = new GameBoard();
     private static final int BLOCK_WIDTH = 50;
     private static final int BLOCK_HEIGHT = 50;
 
+    /**
+     * Instantiates a new Base scene, initiates variables
+     *
+     * @param root      the root
+     * @param imageName the image name
+     * @param navigator the navigator
+     * @throws Exception the exception
+     */
     public BaseScene(Group root, String imageName, Navigator navigator) throws Exception {
         super(root);
         try {
@@ -35,12 +64,19 @@ public abstract class BaseScene extends Scene {
         root.getChildren().add(canvas);
     }
 
+    /**
+     * Instantiates a new Base scene
+     *
+     * @param root      the root
+     * @param navigator the navigator
+     * @throws Exception the exception
+     */
     public BaseScene(Group root, Navigator navigator) throws Exception {
         super(root);
         try {
             gameBoard.buildMap();
         } catch (Exception e) {
-            navigator.navigateTo(Scenes.GAMEWIN);
+            navigator.navigateTo(Scenes.WIN_SCENE);
             throw new RuntimeException(e);
         }
         canvas = new Canvas(gameBoard.getLongestLineInMap() * BLOCK_WIDTH, gameBoard.getLines().size() * BLOCK_HEIGHT);
@@ -49,6 +85,9 @@ public abstract class BaseScene extends Scene {
         root.getChildren().add(canvas);
     }
 
+    /**
+     * Draws gc image
+     */
     public void draw() {
         gc.drawImage(backgroundImage, 0, 0);
     }

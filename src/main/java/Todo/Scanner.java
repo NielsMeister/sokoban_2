@@ -2,13 +2,11 @@ package Todo;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Scanner;
 
-public class Stdlib {
-
+public class Scanner {
 
     public static void main(String[] args) throws IOException {
-        Scanner scan = new Scanner(System.in);
+        java.util.Scanner scan = new java.util.Scanner(System.in);
         while (!scan.hasNextInt()) {
             System.out.println("Input ist keine Nummer.");
             scan.nextLine();

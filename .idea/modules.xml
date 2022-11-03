@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban.main.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban.test.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban.test.iml" />
+    </modules>
+  </component>
+</project>

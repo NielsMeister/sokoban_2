@@ -1,8 +1,8 @@
 package Sokoban.game.enums;
 
 public enum Scenes {
-    GAMEWIN,
-    GAMESTART,
-    GAMEPLAY,
-    GAMEALLLEVELSDONE
+    WIN_SCENE,
+    START_SCENE,
+    PLAY_SCENE,
+    ALLLEVELSDONE_SCENE
 }

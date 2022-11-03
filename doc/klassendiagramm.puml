@@ -9,7 +9,6 @@ SokobanMain ---> GameEndLoose
 SokobanMain ---> GameEndWin
 SokobanMain ---> GamePlay
 SokobanMain ---> GameStart
-SokobanMain ---o Navigator
 Navigator ---> Scenes
 GameBoard ---o BLOCK
 Controller ---o BLOCK

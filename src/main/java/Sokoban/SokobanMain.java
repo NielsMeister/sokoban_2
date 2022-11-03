@@ -9,17 +9,20 @@ import Sokoban.game.scenes.GameStart;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * SokobanMain class
+ */
 public class SokobanMain extends Application {
     private Navigator navigator;
 
     @Override
     public void start(Stage stage) throws Exception {
         navigator = new Navigator(stage);
-        navigator.registerScene(Scenes.GAMEWIN, new GameEndWin(navigator));
-        navigator.registerScene(Scenes.GAMESTART, new GameStart(navigator));
-        navigator.registerScene(Scenes.GAMEPLAY, new GamePlay(navigator));
-        navigator.registerScene(Scenes.GAMEALLLEVELSDONE, new GameAllLevelsDone(navigator));
-        navigator.navigateTo(Scenes.GAMESTART);
+        navigator.registerScene(Scenes.WIN_SCENE, new GameEndWin(navigator));
+        navigator.registerScene(Scenes.START_SCENE, new GameStart(navigator));
+        navigator.registerScene(Scenes.PLAY_SCENE, new GamePlay(navigator));
+        navigator.registerScene(Scenes.ALLLEVELSDONE_SCENE, new GameAllLevelsDone(navigator));
+        navigator.navigateTo(Scenes.START_SCENE);
         stage.setTitle("Sokoban");
         stage.show();
         stage.requestFocus();

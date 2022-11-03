@@ -9,10 +9,19 @@ import javafx.scene.Group;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+/**
+ * GamePlay class
+ */
 public class GamePlay extends BaseScene {
     private final Controller controller = new Controller();
     private final GameBoard gameBoard = new GameBoard();
 
+    /**
+     * Constructor
+     *
+     * @param navigator the navigator
+     * @throws Exception the exception
+     */
     public GamePlay(Navigator navigator) throws Exception {
         super(new Group(), navigator);
         game();
@@ -21,6 +30,10 @@ public class GamePlay extends BaseScene {
         listenOnKey();
     }
 
+    /**
+     * reacts to key pressed.
+     * moves character, draws map, checks for loss or win
+     */
     public void listenOnKey() {
         try {
             gameBoard.setBoard(gameBoard.buildMap());
@@ -58,6 +71,11 @@ public class GamePlay extends BaseScene {
         });
     }
 
+    /**
+     * deals with the win/loose detector
+     *
+     * @throws Exception
+     */
     private void handleDetectWinOrLooseException() throws Exception {
         try {
             detectWinOrLoose();
@@ -68,10 +86,14 @@ public class GamePlay extends BaseScene {
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
-            navigator.navigateTo(Scenes.GAMEALLLEVELSDONE);
+            navigator.navigateTo(Scenes.ALLLEVELSDONE_SCENE);
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * triggers move right
+     */
 
     private void moveRight() {
         try {
@@ -81,6 +103,10 @@ public class GamePlay extends BaseScene {
         }
     }
 
+    /**
+     * triggers move left
+     */
+
     private void moveLeft() {
         try {
             controller.move(gameBoard, -1, 0);
@@ -88,6 +114,10 @@ public class GamePlay extends BaseScene {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * triggers move down
+     */
 
     private void moveDown() {
         try {
@@ -97,6 +127,10 @@ public class GamePlay extends BaseScene {
         }
     }
 
+    /**
+     * triggers move up
+     */
+
     private void moveUp() {
         try {
             controller.move(gameBoard, 0, -1);
@@ -105,6 +139,9 @@ public class GamePlay extends BaseScene {
         }
     }
 
+    /**
+     * Draws map
+     */
     private void drawMap() {
         try {
             gameBoard.drawMap(gc, gameBoard.getBoard());
@@ -113,12 +150,22 @@ public class GamePlay extends BaseScene {
         }
     }
 
+    /**
+     * Checks if there's anything triggering a win or loss
+     *
+     * @throws Exception
+     */
+
     private void detectWinOrLoose() throws Exception {
-        if (controller.isEveryChestOnTarget(gameBoard.getBoard())) {
+        if (controller.eyesOnPortalCheck(gameBoard.getBoard())) {
             try {
                 gameBoard.setLevel(gameBoard.getLevel() + 1);
                 gameBoard.setBoard(gameBoard.buildMap());
-                navigator.navigateTo(Scenes.GAMEWIN);
+                if (gameBoard.getLevel() == 1){
+                    navigator.navigateTo(Scenes.ALLLEVELSDONE_SCENE);
+                } else {
+                    navigator.navigateTo(Scenes.WIN_SCENE);
+                }
                 gameBoard.drawMap(gc, gameBoard.getBoard());
                 controller.setGameOver(false);
             } catch (URISyntaxException | NullPointerException e) {
@@ -126,13 +173,13 @@ public class GamePlay extends BaseScene {
             }
             game();
         }
-        if (controller.isGameOver()) {
+        if (controller.gameOverCheck()) {
             try {
                 gameBoard.setBoard(gameBoard.buildMap());
                 controller.setGameOver(false);
             } catch (IOException | NullPointerException e) {
                 gameBoard.setLevel(1);
-                navigator.navigateTo(Scenes.GAMESTART);
+                navigator.navigateTo(Scenes.START_SCENE);
                 throw new Exception("Level exisitert nicht");
             }
             game();
