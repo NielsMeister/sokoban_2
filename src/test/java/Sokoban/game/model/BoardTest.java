@@ -4,7 +4,8 @@ import Sokoban.game.Board;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class BoardTest {
@@ -25,12 +26,12 @@ class BoardTest {
 
         @Test
         @DisplayName("not_found > if level not exists, go back to level 1")
-        void not_found() throws Exception{
+        void not_found() throws Exception {
             Board board = new Board();
             board.setLevel(TestUtils.generateRandomNumber());
-            try{
+            try {
                 board.buildMap();
-            } catch (AssertionError e){
+            } catch (AssertionError e) {
                 assertEquals(1, board.getLevel());
             }
         }

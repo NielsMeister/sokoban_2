@@ -1,8 +1,8 @@
 package Sokoban.game.scenes;
 
+import Sokoban.game.Board;
 import Sokoban.game.Pilot;
 import Sokoban.game.enums.Scenes;
-import Sokoban.game.Board;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -69,7 +69,7 @@ public abstract class RootScene extends Scene {
      * Instantiates a new RootScene, initiates variables
      * sets up the canvas and graphicsContext for creating the drawing of map, scenes etc.
      *
-     * @param root      the root
+     * @param root  the root
      * @param pilot the navigator
      * @throws RuntimeException in case the map can't get built (correctly)
      */

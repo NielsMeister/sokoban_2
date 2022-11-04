@@ -1,9 +1,9 @@
 package Sokoban.game.scenes;
 
+import Sokoban.game.Board;
 import Sokoban.game.Pilot;
 import Sokoban.game.controller.Controller;
 import Sokoban.game.enums.Scenes;
-import Sokoban.game.Board;
 import javafx.scene.Group;
 
 import java.io.IOException;
@@ -27,6 +27,7 @@ public class GamePlayScene extends RootScene {
         super(new Group(), pilot);
         game();
     }
+
     private void game() {
         handleOnKeyPress();
     }
@@ -158,7 +159,7 @@ public class GamePlayScene extends RootScene {
      * handles the level shifting, navigates to according scene
      *
      * @throws NullPointerException for the case of the set level not existing
-     * @throws RuntimeException for the case of an exception getting thrown during execution
+     * @throws RuntimeException     for the case of an exception getting thrown during execution
      */
 
     private void detectLossOrWin() throws Exception {
@@ -166,7 +167,7 @@ public class GamePlayScene extends RootScene {
             try {
                 board.setLevel(board.getLevel() + 1);
                 board.setBoard(board.buildMap());
-                if (board.getLevel() == 1){
+                if (board.getLevel() == 1) {
                     pilot.navigateTo(Scenes.ALLLEVELSDONE_SCENE);
                 } else {
                     pilot.navigateTo(Scenes.WIN_SCENE);

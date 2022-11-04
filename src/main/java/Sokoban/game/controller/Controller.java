@@ -1,7 +1,7 @@
 package Sokoban.game.controller;
 
-import Sokoban.game.enums.Block;
 import Sokoban.game.Board;
+import Sokoban.game.enums.Block;
 
 /**
  * Controller class, contains logic for movement and gameEnding
@@ -34,11 +34,11 @@ public class Controller {
     /**
      * Moves the character accordingly (prevents illegal movement), reloads board, checks for gameEnding
      *
-     * @param board     the game board
-     * @param x         the value of how far horizontally to move, getting value from key-input: left = -1, right = 1
-     * @param y         the value of how far vertically to move, getting value from key-input: down = -1, up = 1
-     * @throws ArrayIndexOutOfBoundsException   for the case of a movement going (on) out of map
-     * @throws NullPointerException             for the case of the map not getting loaded (correctly)
+     * @param board the game board
+     * @param x     the value of how far horizontally to move, getting value from key-input: left = -1, right = 1
+     * @param y     the value of how far vertically to move, getting value from key-input: down = -1, up = 1
+     * @throws ArrayIndexOutOfBoundsException for the case of a movement going (on) out of map
+     * @throws NullPointerException           for the case of the map not getting loaded (correctly)
      */
     public void move(Board board, int x, int y) throws Exception {
         Block[][] map = board.getBoard();
@@ -83,12 +83,12 @@ public class Controller {
     }
 
     /**
-     *  Checks if Eye is stuck (surrounded by more than one obstacle) and if so, triggers gameOver
+     * Checks if Eye is stuck (surrounded by more than one obstacle) and if so, triggers gameOver
      *
-     * @param x         value for adjusting player position horizontally
-     * @param y         value for adjusting player position vertically
-     * @param map       the built map
-     * @param board     the game board
+     * @param x     value for adjusting player position horizontally
+     * @param y     value for adjusting player position vertically
+     * @param map   the built map
+     * @param board the game board
      * @throws ArrayIndexOutOfBoundsException for the case of movement going (on) out of map
      */
     public void getGameOver(int x, int y, Block[][] map, Board board) throws Exception {
