@@ -4,11 +4,11 @@ import Sokoban.SokobanMain;
 import javafx.application.Application;
 
 /**
- * Launcher class
+ * Launcher class, used for launching process
  */
 public class Launcher {
     /**
-     * The entry point of application
+     * The entry point of application, launches the main
      *
      * @param args the input arguments
      */

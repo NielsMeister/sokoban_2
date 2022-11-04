@@ -1,12 +1,13 @@
 package Sokoban.game.model;
 
+import Sokoban.game.Board;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class GameBoardTest {
+class BoardTest {
 
 
     @DisplayName("Build Map")
@@ -15,9 +16,9 @@ class GameBoardTest {
         @Test
         @DisplayName("happy_path > check game board assignment")
         void happy_path() throws Exception {
-            GameBoard gameBoard = new GameBoard();
-            gameBoard.buildMap();
-            String map = gameBoard.getLines().toString().replace("[", "").replace("]", "");
+            Board board = new Board();
+            board.buildMap();
+            String map = board.getLines().toString().replace("[", "").replace("]", "");
             String actual = "##########, ##########, #######  #, ### .# #.#, #     .  #, # #  $ $ #, # #####  #, ##### $$.#, ### @    #, ##########";
             assertEquals(map, actual);
         }
@@ -25,12 +26,12 @@ class GameBoardTest {
         @Test
         @DisplayName("not_found > if level not exists, go back to level 1")
         void not_found() throws Exception{
-            GameBoard gameBoard = new GameBoard();
-            gameBoard.setLevel(TestUtils.generateRandomNumber());
+            Board board = new Board();
+            board.setLevel(TestUtils.generateRandomNumber());
             try{
-                gameBoard.buildMap();
+                board.buildMap();
             } catch (AssertionError e){
-                assertEquals(1, gameBoard.getLevel());
+                assertEquals(1, board.getLevel());
             }
         }
     }

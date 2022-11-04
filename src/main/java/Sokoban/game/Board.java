@@ -1,4 +1,4 @@
-package Sokoban.game.model;
+package Sokoban.game;
 
 import Sokoban.game.enums.Block;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,33 +13,42 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * GameBoard class
+ * GameBoard class, builds and provides the gameMap
  */
-public class GameBoard {
+public class Board {
+    /**
+     * The 2d array for the map
+     */
     private Block[][] board;
     private int playerY;
     private int playerX;
 
+    /**
+     * Longest row for indicating the width (length) of the map
+     */
     private int longestLineInMap = 0;
     /**
-     * The Lines.
+     * The horizontal arrays, the rows of the 2d array
      */
-    List<String> lines = new ArrayList<>();
+    private List<String> lines = new ArrayList<>();
     private int level = 1;
 
+    /**
+     * HashMap to match images to according blocks
+     */
     private final HashMap<Block, Image> blocksToImages = new HashMap<>();
 
     /**
-     * Instantiates a new Game board.
+     * Instantiates a new Board
      */
-    public GameBoard() {
+    public Board() {
     }
 
     /**
-     * Loads level file, creates board accordingly
+     * Loads .txt level file, creates board accordingly
      *
-     * @return block [][]
-     * @throws Exception the exception
+     * @return block [][] the built map
+     * @throws ArrayIndexOutOfBoundsException incase of something going out of map
      */
     public Block[][] buildMap() throws Exception {
         String fileName = "level" + level + ".txt";
@@ -62,31 +71,36 @@ public class GameBoard {
         board = new Block[lines.size()][longestLineInMap];
         for (int i = 0; i < lines.size(); i++) {
             for (int j = 0; j < longestLineInMap; j++) {
-                switch (lines.get(i).charAt(j)) {
-                    case '#' -> {
-                        board[i][j] = Block.OBSTACLE_BLOCK;
-                    }
-                    case '+' -> {
-                        board[j][i] = Block.OPERATORONDESTINATION_BLOCK;
-                    }
-                    case '.' -> {
-                        board[i][j] = Block.PORTAL_BLOCK;
-                    }
-                    case '@' -> {
-                        board[i][j] = Block.OPERATOR_BLOCK;
-                        setPlayerY(i);
-                        setPlayerX(j);
-                    }
-                    case '$' -> {
-                        board[i][j] = Block.EYE_BLOCK;
-                    }
-                    case ' ' -> {
-                        board[i][j] = Block.GROUND_BLOCK;
-                    }
-                    default -> {
+                try {
+                    switch (lines.get(i).charAt(j)) {
+                        case '#' -> {
+                            board[i][j] = Block.OBSTACLE_BLOCK;
+                        }
+                        case '+' -> {
+                            board[j][i] = Block.OPERATORONDESTINATION_BLOCK;
+                        }
+                        case '.' -> {
+                            board[i][j] = Block.PORTAL_BLOCK;
+                        }
+                        case '@' -> {
+                            board[i][j] = Block.OPERATOR_BLOCK;
+                            setPlayerY(i);
+                            setPlayerX(j);
+                        }
+                        case '$' -> {
+                            board[i][j] = Block.EYE_BLOCK;
+                        }
+                        case ' ' -> {
+                            board[i][j] = Block.GROUND_BLOCK;
+                        }
+                        default -> {
 
+                        }
                     }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new ArrayIndexOutOfBoundsException("Invalide Position für Zuweisung");
                 }
+
             }
         }
         return board;
@@ -95,9 +109,9 @@ public class GameBoard {
     /**
      * Draws map: matches blocks with image
      *
-     * @param gc        the gc
-     * @param gameBoard the game board
-     * @throws Exception the exception
+     * @param gc        the graphicsContext
+     * @param gameBoard the game board / map
+     * @throws ArrayIndexOutOfBoundsException for the case of the images not being able to match to the blocks (correctly)
      */
     public void drawMap(GraphicsContext gc, Block[][] gameBoard) throws Exception {
         Image player = new Image("/gameImages/player.png");
@@ -119,85 +133,85 @@ public class GameBoard {
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new Exception("Die Bilder für die Karte konnten nicht korrekt zugewiesen werden");
+            throw new ArrayIndexOutOfBoundsException("Die Bilder für die Karte konnten nicht korrekt zugewiesen werden");
         }
     }
 
 
     /**
-     * Get board block [][].
+     * Get map
      *
-     * @return the block [][]
+     * @return the 2d array, block[][]
      */
     public Block[][] getBoard() {
         return board;
     }
 
     /**
-     * Sets board.
+     * Sets board
      *
-     * @param board the board
+     * @param board value for the board
      */
     public void setBoard(Block[][] board) {
         this.board = board;
     }
 
     /**
-     * Gets player y.
+     * Gets players value y
      *
-     * @return the player y
+     * @return the players y
      */
     public int getPlayerY() {
         return playerY;
     }
 
     /**
-     * Sets player y.
+     * Sets players y value
      *
-     * @param playerY the player y
+     * @param playerY value for the players y
      */
     public void setPlayerY(int playerY) {
         this.playerY = playerY;
     }
 
     /**
-     * Gets player x.
+     * Gets players x value
      *
-     * @return the player x
+     * @return the value of the players x
      */
     public int getPlayerX() {
         return playerX;
     }
 
     /**
-     * Sets player x.
+     * Sets players x value
      *
-     * @param playerX the player x
+     * @param playerX the value for the players x
      */
     public void setPlayerX(int playerX) {
         this.playerX = playerX;
     }
 
     /**
-     * Sets longest line in map.
+     * Sets longest line in map, the widest point on the board
      *
-     * @param longestLineInMap the longest line in map
+     * @param longestLineInMap the longest horizontal row in map
      */
     public void setLongestLineInMap(int longestLineInMap) {
         this.longestLineInMap = longestLineInMap;
     }
 
     /**
-     * Sets lines.
+     * Sets lines
      *
-     * @param lines the lines
+     * @param lines value for the lines
      */
     public void setLines(List<String> lines) {
         this.lines = lines;
     }
 
     /**
-     * Gets longest line in map.
+     * Gets longest line in map, widest row on board
      *
      * @return the longest line in map
      */
@@ -206,27 +220,27 @@ public class GameBoard {
     }
 
     /**
-     * Gets lines.
+     * Gets lines
      *
-     * @return the lines
+     * @return StringList of lines
      */
     public List<String> getLines() {
         return lines;
     }
 
     /**
-     * Gets level.
+     * Gets current level
      *
-     * @return the level
+     * @return current level value
      */
     public int getLevel() {
         return level;
     }
 
     /**
-     * Sets level.
+     * Sets level
      *
-     * @param level the level
+     * @param level value for the 'new' level
      */
     public void setLevel(int level) {
         this.level = level;

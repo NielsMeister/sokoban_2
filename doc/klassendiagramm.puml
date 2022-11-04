@@ -3,141 +3,131 @@
 
 
 Launcher ---> SokobanMain
-SokobanMain ---o Navigator
+SokobanMain o--> Pilot
 SokobanMain ---> Scenes
-SokobanMain ---> GameEndLoose
-SokobanMain ---> GameEndWin
-SokobanMain ---> GamePlay
-SokobanMain ---> GameStart
-Navigator ---> Scenes
-GameBoard ---o BLOCK
-Controller ---o BLOCK
-Controller ---> GameBoard
-BaseScene ---o Navigator
-GameStart ---> Scenes
-GameStart ---o Navigator
-GamePlay ---o Controller
-GamePlay ---o GameBoard
-GamePlay ---o Navigator
-GamePlay ---> Scenes
-GameEndLoose ---> Scenes
-GameEndLoose ---o Navigator
-GameEndWin ---> Scenes
-GameEndWin ---o Navigator
+SokobanMain ---> AllLevelsDoneScene
+SokobanMain ---> GameEndWinScene
+SokobanMain ---> GamePlayScene
+SokobanMain ---> GameStartScene
+Pilot o--> Scenes
+Board *--> BLOCK
+Controller ---> BLOCK
+Controller ---> Board
+RootScene o--> Pilot
+RootScene ---> Scenes
+RootScene o--> Board
+GameStartScene ---> Scenes
+GamePlayScene o--> Controller
+GamePlayScene o--> Board
+GamePlayScene ---> Scenes
+AllLevelsDoneScene ---> Scenes
+GameEndWinScene ---> Scenes
+GameStartScene o--> Pilot
+GamePlayScene o--> Pilot
+GameEndWinScene o--> Pilot
+AllLevelsDoneScene o--> Pilot
 
-enum BLOCK {
-     BARRIER
-     FLOOR
-     DESTINATION
-     CHEST
-     PLAYER
-     PLAYERONDESTINATION
-}
-enum Scenes{
-    GAMEWIN
-    GAMESTART
-    GAMEPLAY
-    GAMELOOSE
-}
-
-class GameBoard {
-    - board : BLOCK[][]
-    - y : int
-    - x : int
-    - longesLineInMap : int
-    - level : int
-    - blocksToImages : HashMap<BLOCK, Image>
-    - barrierImage : Image final
-    - floorImage : Image final
-    - destinationImage : Image final
-    - chestImage : Image final
-    - playerImage : Image final
-    - buildMap() : BLOCK[][]
-    - drawMap(gc : GraphicsContext, gameBoard : GameBoard) : void
-    - getBoard() : BLOCK[][]
-    - setBoard(board : BLOCK[][]) : void
-    - getY() : int
-    - getX() : int
-    - setX(int x) : void
-    - setY(int y) : void
-    - getLevel() : int
-    - setLevel(level : int) : void
-}
-class Controller{
-    - collidable : boolean
-    - gameBoard : GameBoard
-    - chestX : int
-    - whatIsUnderThePlayer : BLOCK
-    - level : int
-    - isABoxInfront : boolean
-    - isCollidable() : boolean
-    - setCollidable(collidable : boolean) : void
-    - isABoxInfront() : boolean
-    - setIsABoxInfront(isABoxInfront : boolean) : void
-    - getChestY() : int
-    - getChestX() : int
-    - setChestY(chestY : int) : void
-    - setChestX(chestX : int) : void
-    + move(gameBoard : Gameboard) : void
-    - chestInFront(x : int, y : int, map : BLOCK[][]) : BLOCK[][]
-    - allowedToMove(x : int, y : int, map : BLOCK[][]) : void
-    - isGameOver(map : BLOCK[][]) : void
-    - isEveryChestOnTarget(map : BLOCK[][]) : void
-}
-abstract class BaseScene extends Scene{
-    # navigator : Navigator
-    # backGroundImage : Image
+class RootScene {
+    # board : Board
+    # pilot : Pilot
     # canvas : Canvas
     # gc : GraphicsContext
     # root : Group
-    + BaseScene(root : Group, imageName : String, navigator : Navigator)
-    + BaseScene(root : Group, height : int, width : int, navigator : Navigator)
+    # backgroundImage : Image
+    {static} - BLOCK_HEIGHT : int
+    {static} - BLOCK_WIDTH : int
     + draw() : void
 }
-class GameEndLoose extends BaseScene{
-    - animationTimer : AnimationTimer
-    - GameEndLoose(navigator : Navigator)
+
+class GameEndWinScene extends RootScene {
     - action() : void
 }
 
-class GameEndWin extends BaseScene{
-    - animationTimer : AnimationTimer
-    - GameEndWin(navigator : Navigator)
+class GameStartScene extends RootScene {
     - action() : void
 }
 
-class GamePlay extends BaseScene{
-    - gameBoard : GameBoard
+class AllLevelsDoneScene extends RootScene {
+    - action() : void
+}
+
+class GamePlayScene extends RootScene {
     - controller : Controller
-    - ec : ScheduledExecutorService
-    - animationTimer : AnimationTimer
-    - GamePlay(navigator : Navigator)
-    - update() : void
-    - draw(gc : GraphicsContext) : void
+    - board : Board
+    - drawMap() : void
+    + handleOnKeyPress() : void
+    - game() : void
+    - handleLossOrWinException() : void
+    - detectLossOrWin() : void
+    - moveUp() : void
+    - moveDown() : void
+    - moveRight() : void
+    - moveLeft() : void
 }
 
-class GameStart extends BaseScene{
-    - animationTimer : AnimationTimer
-    - GameStart(navigator : Navigator)
-    - action() : void
+class Board {
+    - level : int
+    - longestLineInMap : int
+    - blocksToImages : HashMap <Block, Image>
+    - lines : List<String>
+    - board : BLock[][]
+    - playerX : int
+    - playerY : int
+    + buildMap() : Block[][]
+    + getLongestLineInMap() : int
+    + setLongestLineInMap(int) : void
+    + getLines() : List<String>
+    + setLines(List<String>) : void
+    + getLevel() : int
+    + setLevel(int) : void
+    + getPlayerX() : int
+    + setPlayerX(int) : int
+    + getPlayerY() : int
+    + setPlayerY(int) : int
+    + getBoard() : Board
+    + setBoard(Board) : void
 }
 
-class Launcher{
-    + {static} main(args : String[])
+class Controller {
+    # isGameOver : boolean
+    + gameOverCheck(int, int, Block[][], Board) : void
+    + move(Board, int, int) : void
+    + eyesOnPortalCheck(Block[][]) : boolean
+    + gameOverCheck() : boolean
+    + setGameOver(boolean) : void
 }
 
-class Navigator{
+class Pilot {
     - stage : Stage
-    - sceneMap : HashMap<Scenes, Scene>
-    + Navigator(stage : Stage)
-    + registerScene(scenes : Scenes, scene : Scene): void
-    + navigateTo(scenes : Scenes): void
-    + getScenes() : List<Scene>
+    - sceneMap : Map<Scenes, Scene>
+    + registerScene(Scenes, Scene) : void
+    + navigateTo(Scenes) : void
 }
 
-class SokobanMain extends Application{
-    - navigator : Navigator
-    + start(stage : Stage) : void
+class SokobanMain {
+    - pilot : Pilot
+    + start(Stage) : void
+}
+
+class Launcher {
+    + main(String[]) : void
+}
+
+enum Scenes {
+    START_SCENE
+    PLAY_SCENE
+    WIN_SCENE
+    ALLLEVELSDONESCENE
+}
+
+enum Block {
+    GROUND_BLOCK
+    OBSTACLE_BLOCK
+    EYE_BLOCK
+    OPERATOR_BLOCK
+    PORTAL_BLOCK
+    OPERATORONDESTINATION_BLOCK
+    EYEONDESTINATION_BLOCK
 }
 
 @enduml

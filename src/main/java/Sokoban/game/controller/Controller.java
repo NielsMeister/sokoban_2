@@ -1,119 +1,121 @@
 package Sokoban.game.controller;
 
 import Sokoban.game.enums.Block;
-import Sokoban.game.model.GameBoard;
+import Sokoban.game.Board;
 
 /**
- * Controller class
+ * Controller class, contains logic for movement and gameEnding
  */
 public class Controller {
 
     /**
      * Indicates if game is over
      */
-    public boolean isGameOver = false;
+    protected boolean isGameOver = false;
 
     /**
-     * GameOver boolean
+     * Gets gameOver boolean
      *
-     * @return the boolean
+     * @return the gameOver boolean
      */
-    public boolean gameOverCheck() {
+    public boolean getGameOver() {
         return isGameOver;
     }
 
     /**
-     * Sets GameOver
+     * Sets gameOver boolean
      *
-     * @param gameOver the game over
+     * @param gameOver the value to set gameOver to
      */
     public void setGameOver(boolean gameOver) {
         isGameOver = gameOver;
     }
 
     /**
-     * Moves the character accordingly, reloads board
+     * Moves the character accordingly (prevents illegal movement), reloads board, checks for gameEnding
      *
-     * @param gameBoard the game board
-     * @param x         the x
-     * @param y         the y
-     * @throws Exception the exception
+     * @param board     the game board
+     * @param x         the value of how far horizontally to move, getting value from key-input: left = -1, right = 1
+     * @param y         the value of how far vertically to move, getting value from key-input: down = -1, up = 1
+     * @throws ArrayIndexOutOfBoundsException   for the case of a movement going (on) out of map
+     * @throws NullPointerException             for the case of the map not getting loaded (correctly)
      */
-    public void move(GameBoard gameBoard, int x, int y) throws Exception {
-        Block[][] map = gameBoard.getBoard();
+    public void move(Board board, int x, int y) throws Exception {
+        Block[][] map = board.getBoard();
         try {
-            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.OBSTACLE_BLOCK) {
+            if (map[board.getPlayerY() + y][board.getPlayerX() + x] == Block.OBSTACLE_BLOCK) {
                 return;
             }
-            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.EYE_BLOCK || map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
-                if (map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK || map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.EYE_BLOCK || map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.EYEONDESTINATION_BLOCK) {
+            if (map[board.getPlayerY() + y][board.getPlayerX() + x] == Block.EYE_BLOCK || map[board.getPlayerY() + y][board.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
+                if (map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK || map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2] == Block.EYE_BLOCK || map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2] == Block.EYEONDESTINATION_BLOCK) {
                     return;
                 }
-                if (map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] == Block.PORTAL_BLOCK) {
-                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.EYEONDESTINATION_BLOCK;
+                if (map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2] == Block.PORTAL_BLOCK) {
+                    map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2] = Block.EYEONDESTINATION_BLOCK;
                 } else {
-                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.EYE_BLOCK;
-                    gameOverCheck(x, y, map, gameBoard);
+                    map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2] = Block.EYE_BLOCK;
+                    getGameOver(x, y, map, board);
                 }
-                if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
-                    map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2] = Block.EYE_BLOCK;
+                if (map[board.getPlayerY() + y][board.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
+                    map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2] = Block.EYE_BLOCK;
                 }
             }
-            if (map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] == Block.OPERATORONDESTINATION_BLOCK) {
-                map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] = Block.PORTAL_BLOCK;
+            if (map[board.getPlayerY()][board.getPlayerX()] == Block.OPERATORONDESTINATION_BLOCK) {
+                map[board.getPlayerY()][board.getPlayerX()] = Block.PORTAL_BLOCK;
             } else {
-                map[gameBoard.getPlayerY()][gameBoard.getPlayerX()] = Block.GROUND_BLOCK;
+                map[board.getPlayerY()][board.getPlayerX()] = Block.GROUND_BLOCK;
             }
-            if (map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.PORTAL_BLOCK || map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
-                map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] = Block.OPERATORONDESTINATION_BLOCK;
+            if (map[board.getPlayerY() + y][board.getPlayerX() + x] == Block.PORTAL_BLOCK || map[board.getPlayerY() + y][board.getPlayerX() + x] == Block.EYEONDESTINATION_BLOCK) {
+                map[board.getPlayerY() + y][board.getPlayerX() + x] = Block.OPERATORONDESTINATION_BLOCK;
             } else {
-                map[gameBoard.getPlayerY() + y][gameBoard.getPlayerX() + x] = Block.OPERATOR_BLOCK;
+                map[board.getPlayerY() + y][board.getPlayerX() + x] = Block.OPERATOR_BLOCK;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new Exception("Ungültige Bewegung im Spielfeld. Breite: " + gameBoard.getLongestLineInMap() + " Höhe : " + gameBoard.getLines().size() + "Eingaben: Breite: " + gameBoard.getPlayerX() + " Höhe: " + gameBoard.getPlayerY());
+            throw new ArrayIndexOutOfBoundsException("Ungültige Bewegung im Spielfeld. Breite: " + board.getLongestLineInMap() + " Höhe : " + board.getLines().size() + "Eingaben: Breite: " + board.getPlayerX() + " Höhe: " + board.getPlayerY());
         } catch (NullPointerException e) {
-            throw new Exception("Karte wurde nicht korrekt geladen");
+            throw new NullPointerException("Karte wurde nicht korrekt geladen");
         }
+
         eyesOnPortalCheck(map);
-        gameBoard.setPlayerX(gameBoard.getPlayerX() + x);
-        gameBoard.setPlayerY(gameBoard.getPlayerY() + y);
-        gameBoard.setBoard(map);
+        board.setPlayerX(board.getPlayerX() + x);
+        board.setPlayerY(board.getPlayerY() + y);
+        board.setBoard(map);
     }
 
     /**
-     * Checks if Game is over
+     *  Checks if Eye is stuck (surrounded by more than one obstacle) and if so, triggers gameOver
      *
-     * @param x         the x
-     * @param y         the y
-     * @param map       the map
-     * @param gameBoard the game board
-     * @throws Exception the exception
+     * @param x         value for adjusting player position horizontally
+     * @param y         value for adjusting player position vertically
+     * @param map       the built map
+     * @param board     the game board
+     * @throws ArrayIndexOutOfBoundsException for the case of movement going (on) out of map
      */
-    public void gameOverCheck(int x, int y, Block[][] map, GameBoard gameBoard) throws Exception {
+    public void getGameOver(int x, int y, Block[][] map, Board board) throws Exception {
         try {
-            if (map[gameBoard.getPlayerY() + y * 2 - 1][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 - 1] == Block.OBSTACLE_BLOCK) {
+            if (map[board.getPlayerY() + y * 2 - 1][board.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2 - 1] == Block.OBSTACLE_BLOCK) {
                 setGameOver(true);
             }
-            if (map[gameBoard.getPlayerY() + y * 2 - 1][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 + 1] == Block.OBSTACLE_BLOCK) {
+            if (map[board.getPlayerY() + y * 2 - 1][board.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2 + 1] == Block.OBSTACLE_BLOCK) {
                 setGameOver(true);
             }
-            if (map[gameBoard.getPlayerY() + y * 2 + 1][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 + 1] == Block.OBSTACLE_BLOCK) {
+            if (map[board.getPlayerY() + y * 2 + 1][board.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2 + 1] == Block.OBSTACLE_BLOCK) {
                 setGameOver(true);
             }
-            if (map[gameBoard.getPlayerY() + y * 2 + 1][gameBoard.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[gameBoard.getPlayerY() + y * 2][gameBoard.getPlayerX() + x * 2 - 1] == Block.OBSTACLE_BLOCK) {
+            if (map[board.getPlayerY() + y * 2 + 1][board.getPlayerX() + x * 2] == Block.OBSTACLE_BLOCK && map[board.getPlayerY() + y * 2][board.getPlayerX() + x * 2 - 1] == Block.OBSTACLE_BLOCK) {
                 setGameOver(true);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new Exception("Ungültige Bewegung im Spielfeld. Breite: " + gameBoard.getLongestLineInMap() + " Höhe: " + gameBoard.getLines().size() + "Eingaben: Breite: " + gameBoard.getPlayerX() + " Höhe: " + gameBoard.getPlayerY());
+            throw new ArrayIndexOutOfBoundsException("Ungültige Bewegung im Spielfeld. Breite: " + board.getLongestLineInMap() + " Höhe: " + board.getLines().size() + "Eingaben: Breite: " + board.getPlayerX() + " Höhe: " + board.getPlayerY());
         }
     }
 
     /**
-     * Checks if eyes are on target space
+     * Checks if objects (eyes) are on target space (portal)
      *
-     * @param map the map
-     * @return the boolean
-     * @throws Exception the exception
+     * @param map the 2d array as the map
+     * @return boolean which indicates if all eyes are on targeted position
+     * @throws NullPointerException for the case map doesn't load (correctly)
      */
     public boolean eyesOnPortalCheck(Block[][] map) throws Exception {
         int howManyTargetOrPlayerOnTargetAreFound = 0;
@@ -126,7 +128,7 @@ public class Controller {
                 }
             }
         } catch (NullPointerException e) {
-            throw new Exception("Karte wurde nicht korrekt geladen");
+            throw new NullPointerException("Karte wurde nicht korrekt geladen");
         }
         return howManyTargetOrPlayerOnTargetAreFound == 0;
     }
