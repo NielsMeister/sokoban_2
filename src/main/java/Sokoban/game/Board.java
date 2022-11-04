@@ -49,6 +49,7 @@ public class Board {
      *
      * @return block [][] the built map
      * @throws ArrayIndexOutOfBoundsException incase of something going out of map
+     * @throws Exception basic Exception
      */
     public Block[][] buildMap() throws Exception {
         String fileName = "level" + level + ".txt";
@@ -112,6 +113,7 @@ public class Board {
      * @param gc        the graphicsContext
      * @param gameBoard the game board / map
      * @throws ArrayIndexOutOfBoundsException for the case of the images not being able to match to the blocks (correctly)
+     * @throws Exception basic Exception
      */
     public void drawMap(GraphicsContext gc, Block[][] gameBoard) throws Exception {
         Image player = new Image("/gameImages/player.png");

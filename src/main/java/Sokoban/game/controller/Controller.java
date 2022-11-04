@@ -39,6 +39,7 @@ public class Controller {
      * @param y     the value of how far vertically to move, getting value from key-input: down = -1, up = 1
      * @throws ArrayIndexOutOfBoundsException for the case of a movement going (on) out of map
      * @throws NullPointerException           for the case of the map not getting loaded (correctly)
+     * @throws Exception basic Exception
      */
     public void move(Board board, int x, int y) throws Exception {
         Block[][] map = board.getBoard();
@@ -90,6 +91,7 @@ public class Controller {
      * @param map   the built map
      * @param board the game board
      * @throws ArrayIndexOutOfBoundsException for the case of movement going (on) out of map
+     * @throws Exception basic Exception
      */
     public void getGameOver(int x, int y, Block[][] map, Board board) throws Exception {
         try {
@@ -116,6 +118,7 @@ public class Controller {
      * @param map the 2d array as the map
      * @return boolean which indicates if all eyes are on targeted position
      * @throws NullPointerException for the case map doesn't load (correctly)
+     * @throws Exception basic Exception
      */
     public boolean eyesOnPortalCheck(Block[][] map) throws Exception {
         int howManyTargetOrPlayerOnTargetAreFound = 0;

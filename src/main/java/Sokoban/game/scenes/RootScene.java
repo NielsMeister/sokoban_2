@@ -50,6 +50,7 @@ public abstract class RootScene extends Scene {
      * @param imageName the image name
      * @param pilot     the navigator
      * @throws NullPointerException for the case of the image not being able to load (correctly)
+     * @throws Exception basic Exception
      */
     public RootScene(Group root, String imageName, Pilot pilot) throws Exception {
         super(root);
@@ -72,6 +73,7 @@ public abstract class RootScene extends Scene {
      * @param root  the root
      * @param pilot the navigator
      * @throws RuntimeException in case the map can't get built (correctly)
+     * @throws Exception basic Exception
      */
     public RootScene(Group root, Pilot pilot) throws Exception {
         super(root);
@@ -90,7 +92,7 @@ public abstract class RootScene extends Scene {
     /**
      * Draws backgroundImage on graphicsContext
      *
-     * @params x, y for the drawImage function indicate the position of the image
+     * innerParams x/y for the drawImage function indicate the position of the image on the x/y -axel
      */
     public void draw() {
         gc.drawImage(backgroundImage, 0, 0);

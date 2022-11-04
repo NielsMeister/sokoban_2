@@ -14,6 +14,7 @@ public class AllLevelsDoneScene extends RootScene {
      *
      * @param pilot the navigator
      * @throws RuntimeException for the case exception happens during execution
+     * @throws Exception basic Exception
      */
     public AllLevelsDoneScene(Pilot pilot) throws Exception {
         super(new Group(), "background_gameover", pilot);

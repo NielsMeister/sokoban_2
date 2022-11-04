@@ -44,6 +44,7 @@ public class Pilot {
      *
      * @param scenes the scenes to switch to
      * @throws NullPointerException in case of the given scene not existing
+     * @throws Exception basic Exception
      */
     public void navigateTo(Scenes scenes) throws Exception {
         try {

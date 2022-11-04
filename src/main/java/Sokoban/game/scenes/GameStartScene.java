@@ -15,6 +15,7 @@ public class GameStartScene extends RootScene {
      *
      * @param pilot the navigator
      * @throws RuntimeException for the case an exception happens during execution
+     * @throws Exception basic Exception
      */
     public GameStartScene(Pilot pilot) throws Exception {
         super(new Group(), "background_start", pilot);
