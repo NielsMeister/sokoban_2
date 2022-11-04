@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban.main.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban.test.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban.iml" group="sokoban" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban_main.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban_main.iml" group="sokoban" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sokoban_test.iml" filepath="$PROJECT_DIR$/.idea/modules/sokoban_test.iml" group="sokoban" />
     </modules>
   </component>
 </project>
